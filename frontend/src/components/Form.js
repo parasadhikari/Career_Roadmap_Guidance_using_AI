@@ -27,12 +27,14 @@ const generate = async () => {
 
   try {
     const res = await axios.post(
-      "https://career-roadmap-guidance-using-ai.onrender.com/api/roadmap",
-      {
-        field: role,
-        days: days
-      }
-    );
+  "https://career-roadmap-guidance-using-ai.onrender.com/generate-roadmap",
+  {
+    role,
+    skill,
+    weeks,
+    hours: 10
+  }
+);
 
     setRoadmap(res.data);
     setHistory((prev) => [...prev, "form"]);

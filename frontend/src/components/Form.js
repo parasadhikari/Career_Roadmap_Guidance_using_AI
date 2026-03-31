@@ -7,58 +7,43 @@ function Form({ setScreen, setRoadmap, history, setHistory }) {
   const [skill, setSkill] = useState("Beginner");
   const [date, setDate] = useState("");
 
-  const generate = async () => {
+const generate = async () => {
+  if (!role || !date) {
+    alert("⚠️ Please enter job role and interview date");
+    return;
+  }
 
-    <button
-      className="small-btn"
-      onClick={() => {
-        const prev = history[history.length - 1];
-        if (prev) {
-          setHistory(history.slice(0, -1));
-          setScreen(prev);
-        }
-      }}
-    >
-      ⬅ Previous
-    </button>
+  const today = new Date();
+  const selectedDate = new Date(date);
 
-    // ❗ VALIDATION 1: empty input
-    if (!role || !date) {
-      alert("⚠️ Please enter job role and interview date");
-      return;
-    }
+  if (selectedDate <= today) {
+    alert("⚠️ Please select a future date");
+    return;
+  }
 
-    // ❗ VALIDATION 2: past date
-    const today = new Date();
-    const selectedDate = new Date(date);
+  const days = Math.ceil((selectedDate - today) / 86400000);
 
-    if (selectedDate <= today) {
-      alert("⚠️ Please select a future date");
-      return;
-    }
+  setScreen("loading");
 
-    const days = Math.ceil((selectedDate - today) / 86400000);
-    const weeks = Math.max(1, Math.floor(days / 7));
+  try {
+    const res = await axios.post(
+      "https://career-roadmap-guidance-using-ai.onrender.com/api/roadmap",
+      {
+        field: role,
+        days: days
+      }
+    );
 
-    setScreen("loading");
+    setRoadmap(res.data);
+    setHistory((prev) => [...prev, "form"]);
+    setScreen("roadmap");
 
-    try {
-      const res = await axios.post("https://career-roadmap-guidance-using-ai.onrender.com/api/roadmap", {
-        role,
-        skill,
-        weeks,
-        hours: 10
-      });
-
-      setRoadmap(res.data);
-      setHistory((prev) => [...prev, "form"]);
-      setScreen("roadmap");
-    } catch (err) {
-      alert("Error generating roadmap");
-      setHistory((prev) => [...prev, "roadmap"]);
-      setScreen("form");
-    }
-  };
+  } catch (err) {
+    console.log(err);
+    alert("Error generating roadmap");
+    setScreen("form");
+  }
+};
 
   return (
     <div className="container">

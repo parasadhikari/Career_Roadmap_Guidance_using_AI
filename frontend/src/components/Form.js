@@ -43,7 +43,7 @@ function Form({ setScreen, setRoadmap, history, setHistory }) {
     setScreen("loading");
 
     try {
-      const res = await axios.post("http://localhost:5000/generate-roadmap", {
+      const res = await axios.post("https://career-roadmap-guidance-using-ai.onrender.com/api/roadmap", {
         role,
         skill,
         weeks,

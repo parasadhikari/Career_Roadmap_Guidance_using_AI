@@ -98,4 +98,3 @@ res.json(json);
 });
 
 app.listen(5000, () => console.log("✅ Gemini Backend running on http://localhost:5000"));
-console.log("KEY:", process.env.GROQ_API_KEY);

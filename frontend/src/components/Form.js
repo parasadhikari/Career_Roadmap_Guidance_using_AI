@@ -22,19 +22,20 @@ const generate = async () => {
   }
 
   const days = Math.ceil((selectedDate - today) / 86400000);
+  const weeks = Math.max(1, Math.floor(days / 7)); // ✅ FIX
 
   setScreen("loading");
 
   try {
     const res = await axios.post(
-  "https://career-roadmap-guidance-using-ai.onrender.com/generate-roadmap",
-  {
-    role,
-    skill,
-    weeks,
-    hours: 10
-  }
-);
+      "https://career-roadmap-guidance-using-ai.onrender.com/generate-roadmap",
+      {
+        role,
+        skill,
+        weeks,
+        hours: 10
+      }
+    );
 
     setRoadmap(res.data);
     setHistory((prev) => [...prev, "form"]);
